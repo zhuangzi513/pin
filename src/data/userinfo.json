@@ -1,45 +1,45 @@
 {
-      unique_id:"012345",
-      avatarUrl: '/img/user/avatar.png',
-      nickName: 'nickName',
-      beans: '1000',
-      userLevels: '9',
-      userAdmires: '100',
-      userBeans: 'baoliu',
-      bHideBind: true,
-      userMasks:[
+      "unique_id":"012345",
+      "avatarUrl": "/img/user/avatar.png",
+      "nickName": "nickName",
+      "beans": "1000",
+      "userLevels": "9",
+      "userAdmires": "100",
+      "userBeans": "baoliu",
+      "bHideBind": true,
+      "userMasks":[
         {
-          title:"mask 1",
-          level:"1",
-          zan:"10000",
-          diss:"10000",
-          finished_jobs:"10",
-          working_jobs:"10",
-          bad_jobs:"100",
-          good_jobs:"100",
-          icon:"/img/user/mask_1.png"
+          "title":"mask 1",
+          "level":"1",
+          "zan":"10000",
+          "diss":"10000",
+          "finished_jobs":"10",
+          "working_jobs":"10",
+          "bad_jobs":"100",
+          "good_jobs":"100",
+          "icon":"/img/user/mask_1.png"
         },
         {
-          title:"mask 2",
-          level:"2",
-          zan:"20000",
-          diss:"20000",
-          finished_jobs:"10",
-          working_jobs:"10",
-          bad_jobs:"100",
-          good_jobs:"100",
-          icon:"/img/user/mask_2.png"
+          "title":"mask 2",
+          "level":"2",
+          "zan":"20000",
+          "diss":"20000",
+          "finished_jobs":"10",
+          "working_jobs":"10",
+          "bad_jobs":"100",
+          "good_jobs":"100",
+          "icon":"/img/user/mask_2.png"
         },
         {
-          title:"mask 3",
-          level:"3",
-          zan:"30000",
-          diss:"30000",
-          finished_jobs:"10",
-          working_jobs:"10",
-          bad_jobs:"100",
-          good_jobs:"100",
-          icon:"/img/user/mask_3.png"
+          "title":"mask 3",
+          "level":"3",
+          "zan":"30000",
+          "diss":"30000",
+          "finished_jobs":"10",
+          "working_jobs":"10",
+          "bad_jobs":"100",
+          "good_jobs":"100",
+          "icon":"/img/user/mask_3.png"
         }
-      ],
+      ]
 }
