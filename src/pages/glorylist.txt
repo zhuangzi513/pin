@@ -1,0 +1,108 @@
+<template>
+  <view style="height: {{ windowHeight }}; overflow: hidden">
+    <import src="../plugins/wxParse/wxParse.wxml" />
+
+    <scroll-view class="gloryCardContainer"
+     style="height:{{ windowHeight-50 }}px">
+          <navigator wx:for="{{ childList }}" wx:for-item="item" wx:key="rank"
+           hover-class="none" class="glory_children_item"
+           url="/pages/show?id={{ item.unique_id }}">
+              <view class="child_name">{{ item.name }}</view>
+              <image class="child_image" src="{{ item.img_url }}" />
+              <view class="child_price">{{ item.price }} </view>
+              <view class="child_label">{{ item.liked_by }} people</view>
+              <view class="child_label">{{ item.saved_by }} people</view>
+          </navigator>
+    </view>
+  </view>
+</template>
+<script>
+  import wepy from 'wepy'
+  import api from '@/api/api'
+  import tip from '@/utils/tip'
+  import wxParse from '../plugins/wxParse/wxParse'
+  import CommentList from '@/components/comment_list'
+  import { SYSTEM_INFO, USER_SPECICAL_INFO } from '@/utils/constant'
+
+  export default class GloryDetail extends wepy.page {
+    data = {
+      windowHeight: '100%',
+      rootGloryCategoryCode: 0,
+      childGloryCategoryCode: 0,
+      isFavorite: false,
+      childList: []
+    }
+
+    async getListDetail() {
+      let that = this
+      const json = await api.getGloryListDetail({
+        query: {
+          rootCategoryCode: that.rootGloryCategoryCode,
+          childCategoryCode: that.childGloryCategoryCode
+        }
+      })
+
+      if (json.data.code === '0') {
+        that.childList = json.data.data
+        wxParse.wxParse('detailInfo', 'html', that.childList.detailInfo, this)
+      } else {
+        tip.error(json.data.msg ? json.data.msg : 'Failed to get info of the BB')
+      }
+      that.$apply()
+    }
+
+    onLoad(option) {
+      this.rootGloryCategoryCode = option.rootCategoryCode
+      this.childGloryCategoryCode = option.childGloryListCode
+      this.detail = {}
+      this.isFavorite = false
+      this.$apply()
+
+      this.getListDetail()
+    }
+
+    onShow() {
+      this.isGoodsFavorite()
+      // Get open id, this does not work with test appid
+      let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {}
+      this.openId = userSpecialInfo.openid
+    }
+  }
+</script>
+<style lang="less">
+  .gloryCardContainer {
+    display: flex;
+    position: relative;
+    width: 95%;
+    height: 40%;
+    flex-direction: rows;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 8rpx;
+    box-shadow: 0 4rpx 8rpx rgba(0, 0, 0, 0.1);
+    border: 2rpx solid blue;
+    background-size: cover;
+    background-position: center;
+
+    .glory_children_item{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        writing-mode: vertical-lr;
+        position: relative;
+        width: 25%;
+        height:80%;
+        border-radius: 8rpx;
+        box-shadow: 0 4rpx 8rpx rgba(0, 0, 0, 0.1);
+        border: 2rpx solid green;
+        .child_name {
+        }
+        .child_image {
+        }
+        .child_price {
+        }
+        .child_label {
+        }
+    }
+  }
+</style>
