@@ -1,0 +1,34 @@
+{
+  unique_id:"1000123",
+  shape_info:
+  {
+    x:"1",
+    y:"1",
+    z:"1"
+  },
+  ZANED_by:"100",
+  CONCERNED_by:"100",
+  WANTED_by:"100",
+  PRICE_by_owner:"10.0",
+  PRICE_by_wanted:"9.8",
+  PRICE_offered: [
+    {
+      user_unique_id:"100",
+      offered_price:"1.1",
+      date:"XXXX XX XX"
+    },
+    {
+      user_unique_id:"200",
+      offered_price:"1.1",
+      date:"XXXX XX XX"
+    },
+    {
+      user_unique_id:"300",
+      offered_price:"1.1",
+      date:"XXXX XX XX"
+    }
+  ],
+  show_text_left:"12345",
+  show_text_right:"67890",
+  show_img_middle:"/imgs/show/middle/1000123.jpg"
+}
