@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+<style>
+  .placement_container {
+    display: flex;
+    position: relative;
+    width: 95%;
+    height: 25%;
+    flex-direction: rows;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    align-items: center;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 2px solid blue;
+    background-size: cover;
+    background-position: center;
+  }
+  .placement_card {
+    display: flex;
+    position: relative;
+    width: 20%;
+    height: 50px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 2px solid blue;
+	margin-top:5px;
+	margin-left:5px;
+	margin-right:5px;
+	margin-bottom:5px;
+  }
+  .all_favarite_goods_container {
+    display: flex;
+    flex-direction: rows;
+    align-items: center;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    position: relative;
+    width: 95%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 2px solid green;
+  }
+  .personal_good_card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    width: 40%;
+    height:135px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 2px solid green;
+    margin-top: 10px;
+    margin-bottom:5px;
+  }
+
+</style>
+</head>
+<script>
+
+</script>
+<body>
+
+<div class="placement_container" id="palcement_info_card">
+    <div class="placement_card" id="main_placement_1">
+    </div>
+    <div class="placement_card" id="main_placement_2">
+    </div>
+    <div class="placement_card" id="main_placement_3">
+    </div>
+    <div class="placement_card" id="main_placement_4">
+    </div>
+    <div class="placement_card" id="main_placement_5">
+    </div>
+    <div class="placement_card" id="main_placement_6">
+    </div>
+    <div class="placement_card" id="main_placement_7">
+    </div>
+    <div class="placement_card" id="main_placement_8">
+    </div>
+</div>
+<br/>
+<br/>
+<div class="all_favarite_goods_container" id="favarite_goods">
+    <div class="personal_good_card">
+    </div>
+    <div class="personal_good_card">
+    </div>
+    <div class="personal_good_card">
+    </div>
+    <div class="personal_good_card">
+    </div>
+</div>
+<br/>
+</body>
+</html>
+
