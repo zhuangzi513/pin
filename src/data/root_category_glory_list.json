@@ -1,18 +1,18 @@
 {
-  rootCategoryTitle:"TOP LIST",
-  rootCategoryDesc:"TOP LIST DESC",
-  rootCategoryList:[
+  "rootCategoryTitle":"TOP LIST",
+  "rootCategoryDesc":"TOP LIST DESC",
+  "rootCategoryList":[
     {
-      rootCategoryCode:"0",
-      rootCategoryTitle:"rootCategory 0"
+      "rootCategoryCode":"0",
+      "rootCategoryTitle":"rootCategory 0"
     },
     {
-      rootCategoryCode:"1",
-      rootCategoryTitle:"rootCategory 1"
+      "rootCategoryCode":"1",
+      "rootCategoryTitle":"rootCategory 1"
     },
     {
-      rootCategoryCode:"2",
-      rootCategoryTitle:"rootCategory 2"
+      "rootCategoryCode":"2",
+      "rootCategoryTitle":"rootCategory 2"
     }
   ]
 }
