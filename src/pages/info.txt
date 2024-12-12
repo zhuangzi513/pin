@@ -1,0 +1,239 @@
+<template>
+  <view class="info">
+    <view class="header">
+      <view class="header_content">
+        <image class="avatarUrl" src="{{ avatarUrl }}" />
+        <view class="nickName cfff">{{ nickName }}</view>
+        <view class="nickName cfff">Beans: {{ beans }}</view>
+        <block wx:for="{{ block_glory }}" wx:key="id">
+          <view class="glory_item_content">
+            <image class="item_img" src="{{ item.icon }}"/>
+            <view class="role_text">{{ item.text }} : {{ item.good }} / {{ item.bad }} </view>
+          </view>
+        </block>
+      </view>
+    </view>
+    <view class="info_block">
+      <navigator class="item" url="/pages/register" wx:if="{{ !bHideBind }}">
+        <view>
+          <view class="item_content">
+            <image class="item_img" src="../images/info/icon_my_01.png" />
+            <view class="text" style="color:#fe2a2a"></view>
+          </view>
+          <view class="tip">try to bind</view>
+        </view>
+        <view class="arrow">&gt;</view>
+      </navigator>
+      <block wx:for="{{ block_my_ }}" wx:key="id">
+        <navigator class="item" url="{{ item.pagePath }}">
+          <view class="item_content">
+            <image class="item_img" src="{{ item.imagePath }}"/>
+            <view class="text">{{ item.text }}</view>
+          </view>
+          <view class="arrow">&gt;</view>
+        </navigator>
+      </block>
+    </view>
+
+    <view class="info_block">
+      <block wx:for="{{ block_me_ }}" wx:key="id">
+        <navigator class="item" url="{{ item.pagePath }}">
+          <view class="item_content">
+            <image class="item_img" src="{{ item.imagePath }}"/>
+            <view class="role_text">{{ item.text }}</view>
+            <view class="role_detail">{{ item.good }} / </view>
+          </view>
+          <view class="arrow">&gt;</view>
+        </navigator>
+      </block>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import api from '@/api/api'
+  import tip from '@/utils/tip'
+  import { USER_INFO, USER_SPECICAL_INFO } from '@/utils/constant'
+
+  export default class Category extends wepy.page {
+    config = {
+      navigationBarTitleText: '我'
+    }
+
+    components = {
+    }
+
+    data = {
+      avatarUrl: '',
+      nickName: '',
+      beans: '',
+      userLevels: '',
+      userAdmires: '',
+      userMasks: '',
+      userBeans: '',
+      bHideBind: true,
+      block_glory: [
+        {
+          'text' : 'first_mask',
+          'level': '',
+          'good': '',
+          'bad': '',
+          'icon': '',
+        }
+      ],
+      block_my_: [
+        {
+          'pagePath': '/pages/release',
+          'imagePath': '../images/info/icon_my_02.png',
+          'text': ''
+        },
+        {
+          'pagePath': '/pages/zan',
+          'imagePath': '../images/info/icon_my_02.png',
+          'text': ''
+        },
+        {
+          'pagePath': '/pages/fav',
+          'imagePath': '../images/info/icon_my_03.png',
+          'text': ''
+        }
+      ],
+      block_me_: [
+        {
+          'pagePath': '/pages/release_messages',
+          'imagePath': '../images/info/icon_my_06.png',
+          'text': 'release messages'
+        },
+        {
+          'pagePath': '/pages/fav_messages',
+          'imagePath': '../images/info/icon_my_06.png',
+          'text': 'release messages'
+        }
+      ]
+    }
+
+    computed = {
+    }
+
+    methods = {
+    }
+
+    events = {
+    }
+
+    async getUserInfo(phone, code) {
+      let that = this
+      let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {}
+      let openId = userSpecialInfo.openid
+      const json = await api.getUserInfo({
+        query: {
+          openId: openId
+        }
+      })
+
+      if (json.data.code === 0) {
+        this.bHideBind  = (json.data.user != null && json.data.user.mobile.length > 0)
+        this.userLevels = json.data.user.levels
+        this.userAdmirs = json.data.user.admirs
+        this.userMasks  = json.data.user.masks
+        this.userSeeds  = json.data.user.seeds
+        that.$apply()
+      } else {
+        tip.error(json.data.msg)
+      }
+      that.showLoading = false
+    }
+
+    onLoad() {
+      let that = this
+      let userInfo = wepy.getStorageSync(USER_INFO)
+      that.avatarUrl = userInfo.avatarUrl
+      that.nickName = userInfo.nickName
+      this.getUserInfo()
+    }
+  }
+</script>
+<style lang="less">
+  .header {
+    background: #fff;
+    height: 260rpx;
+    width: 100%;
+  }
+
+  .header_content {
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
+    padding-top: 48rpx;
+
+    .glory_item_content {
+      display: flex;
+      align-items: center;
+      .item_img {
+        width: 42rpx;
+        height: 42rpx;
+      }
+      .role_text {
+        margin-left: 20rpx;
+        color: #1a1a1a;
+      }
+    }
+  }
+
+  .avatarUrl {
+    width: 122rpx;
+    height: 122rpx;
+    border-radius: 1000px;
+  }
+
+  .nickName {
+    font-size: 30rpx;
+    padding-top: 15rpx;
+  }
+
+  .info_block {
+    margin-top: 30rpx;
+
+    .item {
+      border-top: 1rpx solid #dbdbdb;
+      background: #fff;
+      padding: 34rpx 28rpx;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 30rpx;
+    }
+
+    .item:last-child {
+      border-bottom: 1rpx solid #dbdbdb;
+    }
+
+    .item_content {
+      display: flex;
+      align-items: center;
+
+      .text {
+        margin-left: 20rpx;
+        color: #1a1a1a;
+      }
+    }
+
+    .item_img {
+      width: 42rpx;
+      height: 42rpx;
+    }
+
+    .arrow {
+      color: #cccccc;
+      font-size: 32rpx;
+    }
+
+    .tip {
+      color: #999;
+      font-size: 24rpx;
+      margin-top: 20rpx;
+      margin-left: 60rpx;
+    }
+  }
+</style>
