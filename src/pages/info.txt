@@ -1,53 +1,70 @@
 <template>
-  <view class="info">
-    <view class="header">
-      <view class="header_content">
-        <image class="avatarUrl" src="{{ avatarUrl }}" />
-        <view class="nickName cfff">{{ nickName }}</view>
-        <view class="nickName cfff">Beans: {{ beans }}</view>
-        <block wx:for="{{ block_glory }}" wx:key="id">
-          <view class="glory_item_content">
-            <image class="item_img" src="{{ item.icon }}"/>
-            <view class="role_text">{{ item.text }} : {{ item.good }} / {{ item.bad }} </view>
-          </view>
-        </block>
-      </view>
-    </view>
-    <view class="info_block">
-      <navigator class="item" url="/pages/register" wx:if="{{ !bHideBind }}">
-        <view>
-          <view class="item_content">
-            <image class="item_img" src="../images/info/icon_my_01.png" />
-            <view class="text" style="color:#fe2a2a"></view>
-          </view>
-          <view class="tip">try to bind</view>
-        </view>
-        <view class="arrow">&gt;</view>
-      </navigator>
-      <block wx:for="{{ block_my_ }}" wx:key="id">
-        <navigator class="item" url="{{ item.pagePath }}">
-          <view class="item_content">
-            <image class="item_img" src="{{ item.imagePath }}"/>
-            <view class="text">{{ item.text }}</view>
-          </view>
-          <view class="arrow">&gt;</view>
-        </navigator>
-      </block>
-    </view>
+    <view class="info_container">
+        <view class="info_block">
+            <view class="header">
+                <view class="basicinfo_content">
+                    <view class="head_view">
+                        <image class="avatar" src=" avatarUrl " />
+                        <view class="head_view_text_info">
+                            <text class="head_text">" nickName "</text>
+                            <text class="head_text">"FANS   09 "</text>
+                            <text class="head_text">"BEANS  09 "</text>
+                        </vew>
+                    </view>
 
-    <view class="info_block">
-      <block wx:for="{{ block_me_ }}" wx:key="id">
-        <navigator class="item" url="{{ item.pagePath }}">
-          <view class="item_content">
-            <image class="item_img" src="{{ item.imagePath }}"/>
-            <view class="role_text">{{ item.text }}</view>
-            <view class="role_detail">{{ item.good }} / </view>
-          </view>
-          <view class="arrow">&gt;</view>
-        </navigator>
-      </block>
+                    <view class="mask_items_content">
+                        <view class="mask_item">
+                            <image class="item_img" src=" mask1.icon "/>
+                            <text class="role_title">" mask_X  LZ " </text>
+                        </view>
+                        <view class="mask_item">
+                            <image class="item_img" src=" mask2.icon "/>
+                            <text class="role_title">" mask_Y  LB " </text>
+                        </view>
+                        <view class="mask_item">
+                            <image class="item_img" src=" .mask3.icon "/>
+                            <text class="role_title">" mask_Z  LA" </text>
+                        </view>
+                    </view>
+                </view>
+            </view>
+            <view class="concerned_block">
+                <navigator class="concerned_item" url=" .my_released.pagePath ">
+                    <text class="concerned_title">" .my_released.text "</text>
+                </navigator>
+                <navigator class="concerned_item" url=" .my_pending_rel.pagePath ">
+                    <text class="concerned_title">" .my_pending_rel.text "</text>
+                </navigator>
+                <navigator class="concerned_item" url=" .my_fav.pagePath ">
+                    <text class="concerned_title">" .my_fav.text "</text>
+                </navigator>
+            </view>
+            <view class="concerned_block">
+                <navigator class="concerned_item" url=" .fans.pagePath ">
+                    <text class="concerned_title">" .fans.text "</text>
+                </navigator>
+                <navigator class="concerned_item" url=" .gods.pagePath ">
+                    <text class="concerned_title">" .gods.text "</text>
+                </navigator>
+            </view>
+            <view class="concerned_block">
+                <navigator class="concerned_item" url=" pagePath ">
+                    <text class="concerned_title">" text "</text>
+                </navigator>
+            </view>
+        </view>
+        <view class="info_block">
+            <navigator class="registercontent" url="/pages/register" wx:if=" !bHideBind ">
+                <view>
+                    <view class="item_content">
+                        <image class="item_img" src="../images/info/go_register.png" />
+                        <view class="text" style="color:#fe2a2a"></view>
+                    </view>
+                    <view class="tip">try to bind</view>
+                </view>
+            </navigator>
+        </view>
     </view>
-  </view>
 </template>
 
 <script>
@@ -58,59 +75,13 @@
 
   export default class Category extends wepy.page {
     config = {
-      navigationBarTitleText: '我'
+      navigationBarTitleText: 'MY'
     }
 
     components = {
     }
 
     data = {
-      avatarUrl: '',
-      nickName: '',
-      beans: '',
-      userLevels: '',
-      userAdmires: '',
-      userMasks: '',
-      userBeans: '',
-      bHideBind: true,
-      block_glory: [
-        {
-          'text' : 'first_mask',
-          'level': '',
-          'good': '',
-          'bad': '',
-          'icon': '',
-        }
-      ],
-      block_my_: [
-        {
-          'pagePath': '/pages/release',
-          'imagePath': '../images/info/icon_my_02.png',
-          'text': ''
-        },
-        {
-          'pagePath': '/pages/zan',
-          'imagePath': '../images/info/icon_my_02.png',
-          'text': ''
-        },
-        {
-          'pagePath': '/pages/fav',
-          'imagePath': '../images/info/icon_my_03.png',
-          'text': ''
-        }
-      ],
-      block_me_: [
-        {
-          'pagePath': '/pages/release_messages',
-          'imagePath': '../images/info/icon_my_06.png',
-          'text': 'release messages'
-        },
-        {
-          'pagePath': '/pages/fav_messages',
-          'imagePath': '../images/info/icon_my_06.png',
-          'text': 'release messages'
-        }
-      ]
     }
 
     computed = {
@@ -133,11 +104,6 @@
       })
 
       if (json.data.code === 0) {
-        this.bHideBind  = (json.data.user != null && json.data.user.mobile.length > 0)
-        this.userLevels = json.data.user.levels
-        this.userAdmirs = json.data.user.admirs
-        this.userMasks  = json.data.user.masks
-        this.userSeeds  = json.data.user.seeds
         that.$apply()
       } else {
         tip.error(json.data.msg)
@@ -146,94 +112,155 @@
     }
 
     onLoad() {
-      let that = this
-      let userInfo = wepy.getStorageSync(USER_INFO)
-      that.avatarUrl = userInfo.avatarUrl
-      that.nickName = userInfo.nickName
-      this.getUserInfo()
+          this.data = {
+          basicUserInfo:{
+            'admirs':'100',
+            'nickName':'nickname',
+            'beans':'100',
+            'avatarUrl':'/img/user/avatar.png',
+            'cellNum':'13113141315',
+            'contactId':'W13113141315X'
+          },
+          userMasks:{
+              mask1:{
+                  'title':'mask 1',
+                  'level':'1',
+                  'zan':'10000',
+                  'diss':'10000',
+                  'finished_jobs':'10',
+                  'working_jobs':'10',
+                  'bad_jobs':'100',
+                  'good_jobs':'100',
+                  'icon':'/img/user/mask_1.png'
+              },
+              mask2:{
+                  'title':'mask 2',
+                  'level':'2',
+                  'zan':'20000',
+                  'diss':'20000',
+                  'finished_jobs':'10',
+                  'working_jobs':'10',
+                  'bad_jobs':'100',
+                  'good_jobs':'100',
+                  'icon':'/img/user/mask_2.png'
+              },
+              mask3:{
+                  'title':'mask 3',
+                  'level':'3',
+                  'zan':'30000',
+                  'diss':'30000',
+                  'finished_jobs':'10',
+                  'working_jobs':'10',
+                  'bad_jobs':'100',
+                  'good_jobs':'100',
+                  'icon':'/img/user/mask_3.png'
+              }
+          },
+          block_DX_concerned: {
+            my_released:{
+              'pagePath': '/pages/concerned/released',
+              'imagePath': '../images/info/icon_my_release.png',
+              'text': 'my release'
+            },
+            my_pending_rel:{
+              'pagePath': '/pages/concerned/releaseing',
+              'imagePath': '../images/info/icon_my_releasing.png',
+              'text': 'my pending release'
+            },
+            my_fav:{
+              'pagePath': '/pages/concerned/fav',
+              'imagePath': '../images/info/icon_my_fav.png',
+              'text': 'my favorite'
+            }
+          },
+          block_RW_concerned: {
+            fans:{
+              'pagePath': '/pages/concerned/fans',
+              'imagePath': '../images/info/icon_my_fans.png',
+              'text': 'my fans'
+            },
+            gods:{
+              'pagePath': '/pages/concerned/gods',
+              'imagePath': '../images/info/icon_my_gods.png',
+              'text': 'my gods'
+            }
+          },
+          block_BD_concerned: {
+              'pagePath': '/pages/concerned/bd',
+              'imagePath': '../images/info/icon_my_bd.png',
+              'text': 'concerned BD'
+          },
+          block_messages:{
+              'pagePath': '/pages/system_messages',
+              'imagePath': '../images/info/icon_system_msg.png',
+              'text': 'secure messages'
+            }
+        }
+        this.$apply()
     }
-  }
+}
 </script>
 <style lang="less">
-  .header {
-    background: #fff;
-    height: 260rpx;
+  .info_container {
+    background: red;
     width: 100%;
-  }
-
-  .header_content {
-    width: 100%;
-    margin: 0 auto;
-    text-align: center;
-    padding-top: 48rpx;
-
-    .glory_item_content {
-      display: flex;
-      align-items: center;
-      .item_img {
-        width: 42rpx;
-        height: 42rpx;
-      }
-      .role_text {
-        margin-left: 20rpx;
-        color: #1a1a1a;
-      }
-    }
-  }
-
-  .avatarUrl {
-    width: 122rpx;
-    height: 122rpx;
-    border-radius: 1000px;
-  }
-
-  .nickName {
-    font-size: 30rpx;
-    padding-top: 15rpx;
+    height: 100%;
+    border: 5px dotted red;
   }
 
   .info_block {
-    margin-top: 30rpx;
+    background: black;
+    margin: 4rpx;
+    width: 100%;
+    height: 40%;
+    border: 5px dotted black;
+  }
 
-    .item {
-      border-top: 1rpx solid #dbdbdb;
-      background: #fff;
-      padding: 34rpx 28rpx;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 30rpx;
-    }
+  .header {
+    background: green;
+    height: 260rpx;
+    width: 100%;
+    border: 5px dotted green;
+  }
 
-    .item:last-child {
-      border-bottom: 1rpx solid #dbdbdb;
-    }
+  .basicinfo_content {
+    background: green;
+    width: 100%;
+    height: 25%;
+    margin: 0 auto;
+    text-align: center;
+    padding-top: 48rpx;
+    border: 5px dotted green;
 
-    .item_content {
-      display: flex;
-      align-items: center;
+    .head_view {
+      width: 60%;
+      margin: 3;
+      .avatar {
+        background: black;
+        width: 122rpx;
+        height: 122rpx;
+        border-radius: 1000px;
+      }
 
-      .text {
-        margin-left: 20rpx;
-        color: #1a1a1a;
+      .head_view_text_info {
+        .head_text {
+          font-size: 30rpx;
+          padding-top: 15rpx;
+        }
       }
     }
-
-    .item_img {
-      width: 42rpx;
-      height: 42rpx;
-    }
-
-    .arrow {
-      color: #cccccc;
-      font-size: 32rpx;
-    }
-
-    .tip {
-      color: #999;
-      font-size: 24rpx;
-      margin-top: 20rpx;
-      margin-left: 60rpx;
+    .mask_items_content {
+      width: 35%;
+      .mask_item{
+        .item_img {
+          width: 42rpx;
+          height: 42rpx;
+        }
+        .role_title {
+          margin-left: 20rpx;
+          color: #1a1a1a;
+        }
+      }
     }
   }
 </style>
