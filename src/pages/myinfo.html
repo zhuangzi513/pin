@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人信息</title>
+    <style>
+        /* 全局样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* 头部样式 */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #e0e0e0;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+        
+        /* 用户信息部分 */
+        .user-info {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+        
+        .avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 15px;
+            display: block;
+            border: 3px solid #f0f0f0;
+        }
+        
+        .username {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .user-title {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        
+        .user-stats {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: #777;
+        }
+        
+        .stat-value {
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        /* 功能按钮部分 */
+        .action-buttons {
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+            border: 1px solid transparent;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .btn-primary {
+            background-color: #4a90e2;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #3a7bc8;
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border-color: #ddd;
+            color: #555;
+        }
+        
+        .btn-outline:hover {
+            background-color: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>个人信息</h1>
+        </header>
+        
+        <!-- 用户信息部分 -->
+        <div class="user-info">
+            <img src="https://via.placeholder.com/150" alt="用户头像" class="avatar">
+            <h2 class="username">张三</h2>
+            <p class="user-title">高级会员</p>
+            
+            <div class="user-stats">
+                <div class="stat-item">
+                    <div class="stat-label">听过歌曲</div>
+                    <div class="stat-value">500</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">评价歌曲</div>
+                    <div class="stat-value">200</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">受邀次数</div>
+                    <div class="stat-value">50</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">好评/差评比例</div>
+                    <div class="stat-value">4.5</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 功能按钮部分 -->
+        <div class="action-buttons">
+            <a href="/pages/my_collections.html" class="btn btn-primary">个人收藏</a>
+            <a href="/pages/messages.html" class="btn btn-primary">消息通知</a>
+        </div>
+    </div>
+</body>
+</html>
