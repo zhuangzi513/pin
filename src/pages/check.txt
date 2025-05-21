@@ -1,245 +1,526 @@
-<template>
-  <text class="title"> check </text>
-  <view class="check_info_container">
-      <view class="table">
-          <view class="table-row">
-              <view class="table-cell">" Category "</view>
-              <picker mode="selector" range="{{ categoryRange }}" bindchange="onCategoryPickerChange"/>
-                  <view class="picker">
-                      category: {{ categoryRange[categoryIndex] }}
-                  </view>
-              </picker>
-              <view class="table-cell">" Quality "</view>
-              <picker mode="selector" range="{{ qualityRange }}" bindchange="onQualityPickerChange"/>
-                  <view class="picker">
-                      quality: {{ qualityRange[qualityIndex] }}
-                  </view>
-              </picker>
-              <view class="table-cell">" Color "</view>
-              <view class="table-cell">
-                  <picker mode="selector" range="{{ colorRange }}" bindchange="onColorPickerChange"/>
-                      <view class="picker">
-                          color: {{ colorRange[colorIndex] }}
-                      </view>
-                  </picker>
-              </view>
-          </view>
-          <view class="table-row">
-              <view class="table-cell">" X "</view>
-              <view class="table-cell">
-                  <input type="text" model:value="item.value" bindinput="onSizeXInput"/>
-              </view>
-              <view class="table-cell">" Y "</view>
-              <view class="table-cell">
-                  <input type="text" model:value="item.value" bindinput="onSizeYInput"/>
-              </view>
-              <view class="table-cell">" Z "</view>
-              <view class="table-cell">
-                  <input type="text" model:value="item.value" bindinput="onSizeZInput"/>
-              </view>
-          </view>
-          <view class="table-row">
-              <view class="table-cell">" expect price "</view>
-              <view class="table-cell">
-                  <input type="text" model:value="item.value" bindinput="onPriceInput"/>
-              </view>
-          </view>
-          <view class="table-row">
-              <view class="weui-uploader__input-box">
-                  <view class="weui-uploader__input" @tap="chooseImage"></view>
-              </view>
-          </view>
-
-      </view>
-      <view class="btn-box">
-          <view class="button" @tap.stop="doCheck">do check now</view>
-      </view>
-  </view>
-</template>
-
-<script>
-  import wepy from 'wepy'
-  import api from '@/api/api'
-  import { USER_SPECICAL_INFO, SEARCH_KEYWORDS } from '@/utils/constant'
-
-  export default class Check extends wepy.page {
-    config = {
-      navigationBarTitleText: 'check file'
-    }
-
-    components = {
-    }
-
-    data = {
-      openId : '',
-      colorRange: [
-          'green',
-          'yellow',
-          'pink'
-      ],
-      colorIndex: '',
-      qualityRange: [
-          'High',
-          'normal',
-          'low'
-      ],
-      qualityIndex: '',
-      categoryRange: [
-          'WSP',
-          'DZ',
-          'FG',
-          'ED'
-      ],
-      categoryIndex: '',
-
-      checkInfo : {
-        categoryCode: 0,
-        colorCode: 0,
-        qualityCode: 0,
-        size_X: 0,
-        size_Y: 0,
-        size_Z: 0
-      },
-      priceExpected : 0,
-      priceMay : 0,
-      uploadFiles:[]
-    }
-
-    methods = {
-        onCategoryPickerChange(e) {
-            this.checkInfo.categoryCode = e.value;
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">GPU估价系统</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
         }
-
-        onColorPickerChange(e) {
-            this.checkInfo.colorCode = e.value;
+        .form-group {
+            margin-bottom: 15px;
         }
-
-        onQualityPickerChange(e) {
-            this.checkInfo.qualityCode = e.value;
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
         }
-
-
-        onSizeXInput(e) {
-            this.checkInfo.size_X = e.value;
+        input, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
         }
-
-        onSizeXInput(e) {
-            this.checkInfo.size_Y = e.value;
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
         }
-
-        onSizeZInput(e) {
-            this.checkInfo.size_Z = e.value;
+        button:hover {
+            background-color: #45a049;
         }
-
-        onPriceInput(e) {
-            this.priceExpected = e.value;
+        .image-upload {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
         }
-
-        async checkInfo(currentPage, size) {
-          let that = this
-          const json = await api.getGetLikeList({
-            query: {
-              page: currentPage || 1,
-              size: size || 10,
-              categoryCode: this.check_info.categoryCode || '',
-              colorCode: this.check_info.colorCode || '',
-              qualityCode: this.check_info.qualityCode || '',
-              sizeXYZ: this.check_info.sizeXYZ || '',
-              sort: this.sort,
+        .image-preview {
+            width: 150px;
+            height: 150px;
+            border: 1px dashed #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .image-preview img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+        .result-section {
+            margin-top: 30px;
+            display: none;
+        }
+        .similar-products {
+            margin-top: 20px;
+            display: none;
+        }
+        .product-item {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+        .product-link {
+            color: #0066cc;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .product-link:hover {
+            text-decoration: underline;
+        }
+        .product-detail {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1 id="mainHeader">GPU估价系统</h1>
+    
+    <form id="gpuForm">
+        <div class="form-group">
+            <label id="uploadImagesLabel">上传GPU图片 (最多4张)</label>
+            <div class="image-upload">
+                <div class="image-preview" id="preview1">
+                    <span id="uploadHint1">点击上传图片1</span>
+                    <input type="file" accept="image/*" style="display: none;" onchange="previewImage(this, 'preview1')">
+                </div>
+                <div class="image-preview" id="preview2">
+                    <span id="uploadHint2">点击上传图片2</span>
+                    <input type="file" accept="image/*" style="display: none;" onchange="previewImage(this, 'preview2')">
+                </div>
+                <div class="image-preview" id="preview3">
+                    <span id="uploadHint3">点击上传图片3</span>
+                    <input type="file" accept="image/*" style="display: none;" onchange="previewImage(this, 'preview3')">
+                </div>
+                <div class="image-preview" id="preview4">
+                    <span id="uploadHint4">点击上传图片4</span>
+                    <input type="file" accept="image/*" style="display: none;" onchange="previewImage(this, 'preview4')">
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label id="dimensionsLabel">尺寸信息</label>
+            <div style="display: flex; gap: 10px;">
+                <input type="number" id="length" placeholder="长度(mm)" required>
+                <input type="number" id="width" placeholder="宽度(mm)" required>
+                <input type="number" id="height" placeholder="高度(mm)" required>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label id="brandLabel">品牌信息</label>
+            <select id="brand" required>
+                <option value="">请选择品牌</option>
+                <option value="沐曦">沐曦</option>
+                <option value="英伟达">英伟达</option>
+                <option value="天数">天数</option>
+                <option value="AMD">AMD</option>
+                <option value="英特尔">英特尔</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label id="productionDateLabel">生产日期</label>
+            <select id="productionDate" required>
+                <option value="">请选择生产日期</option>
+                <option value="1">1年</option>
+                <option value="2">2年</option>
+                <option value="3">3年</option>
+                <option value="4">4年</option>
+                <option value="5">5年以上</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label id="expectedPriceLabel">期望价格(元)</label>
+            <input type="number" id="expectedPrice" placeholder="请输入期望价格" required>
+        </div>
+        
+        <button type="submit" id="submitBtn">提交估价</button>
+    </form>
+    
+    <div class="result-section" id="resultSection">
+        <h2 id="resultHeader">估价结果</h2>
+        <p><strong id="recommendedPriceLabel">推荐价格:</strong> <span id="recommendedPrice"></span> <span id="currencyUnit">元</span></p>
+        <p><strong id="similarCountLabel">类似GPU数量:</strong> <span id="similarCount"></span> <span id="unitLabel">个</span></p>
+        <button id="showSimilarBtn">查看类似商品信息</button>
+        
+        <div class="similar-products" id="similarProducts">
+            <h3 id="similarProductsHeader">类似商品信息 (前10个)</h3>
+            <div id="productList"></div>
+        </div>
+    </div>
+    
+    <div class="product-detail" id="productDetail">
+        <h3 id="detailTitle">商品详情</h3>
+        <div id="detailContent"></div>
+        <button id="backToListBtn">返回列表</button>
+    </div>
+    
+    <script>
+        // 多语言配置
+        const i18nConfig = {
+            "zh-CN": {
+                "pageTitle": "GPU估价系统",
+                "mainHeader": "GPU估价系统",
+                "uploadImagesLabel": "上传GPU图片 (最多4张)",
+                "uploadHint1": "点击上传图片1",
+                "uploadHint2": "点击上传图片2",
+                "uploadHint3": "点击上传图片3",
+                "uploadHint4": "点击上传图片4",
+                "dimensionsLabel": "尺寸信息",
+                "lengthPlaceholder": "长度(mm)",
+                "widthPlaceholder": "宽度(mm)",
+                "heightPlaceholder": "高度(mm)",
+                "brandLabel": "品牌信息",
+                "selectBrand": "请选择品牌",
+                "productionDateLabel": "生产日期",
+                "selectProductionDate": "请选择生产日期",
+                "year1": "1年",
+                "year2": "2年",
+                "year3": "3年",
+                "year4": "4年",
+                "year5": "5年以上",
+                "expectedPriceLabel": "期望价格(元)",
+                "expectedPricePlaceholder": "请输入期望价格",
+                "submitBtn": "提交估价",
+                "resultHeader": "估价结果",
+                "recommendedPriceLabel": "推荐价格:",
+                "similarCountLabel": "类似GPU数量:",
+                "currencyUnit": "元",
+                "unitLabel": "个",
+                "showSimilarBtn": "查看类似商品信息",
+                "similarProductsHeader": "类似商品信息 (前10个)",
+                "detailTitle": "商品详情",
+                "backToListBtn": "返回列表",
+                "brandText": "品牌:",
+                "modelText": "型号:",
+                "dimensionsText": "尺寸:",
+                "productionDateText": "生产日期:",
+                "priceText": "价格:",
+                "descriptionText": "详细描述:"
+            },
+            "en-US": {
+                "pageTitle": "GPU Valuation System",
+                "mainHeader": "GPU Valuation System",
+                "uploadImagesLabel": "Upload GPU Images (Max 4)",
+                "uploadHint1": "Click to upload image 1",
+                "uploadHint2": "Click to upload image 2",
+                "uploadHint3": "Click to upload image 3",
+                "uploadHint4": "Click to upload image 4",
+                "dimensionsLabel": "Dimensions",
+                "lengthPlaceholder": "Length(mm)",
+                "widthPlaceholder": "Width(mm)",
+                "heightPlaceholder": "Height(mm)",
+                "brandLabel": "Brand",
+                "selectBrand": "Select Brand",
+                "productionDateLabel": "Production Date",
+                "selectProductionDate": "Select Production Date",
+                "year1": "1 year",
+                "year2": "2 years",
+                "year3": "3 years",
+                "year4": "4 years",
+                "year5": "5+ years",
+                "expectedPriceLabel": "Expected Price",
+                "expectedPricePlaceholder": "Enter expected price",
+                "submitBtn": "Submit Valuation",
+                "resultHeader": "Valuation Result",
+                "recommendedPriceLabel": "Recommended Price:",
+                "similarCountLabel": "Similar GPUs:",
+                "currencyUnit": "USD",
+                "unitLabel": "items",
+                "showSimilarBtn": "View Similar Products",
+                "similarProductsHeader": "Similar Products (Top 10)",
+                "detailTitle": "Product Details",
+                "backToListBtn": "Back to List",
+                "brandText": "Brand:",
+                "modelText": "Model:",
+                "dimensionsText": "Dimensions:",
+                "productionDateText": "Production Date:",
+                "priceText": "Price:",
+                "descriptionText": "Description:"
             }
-          })
-          that.$apply()
+        };
+
+        // 当前语言设置
+        let currentLanguage = 'zh-CN';
+        
+        // 初始化界面文本
+        function initUI() {
+            const lang = i18nConfig[currentLanguage];
+            
+            // 设置页面标题和主标题
+            document.getElementById('pageTitle').textContent = lang.pageTitle;
+            document.getElementById('mainHeader').textContent = lang.mainHeader;
+            
+            // 设置表单文本
+            document.getElementById('uploadImagesLabel').textContent = lang.uploadImagesLabel;
+            document.getElementById('uploadHint1').textContent = lang.uploadHint1;
+            document.getElementById('uploadHint2').textContent = lang.uploadHint2;
+            document.getElementById('uploadHint3').textContent = lang.uploadHint3;
+            document.getElementById('uploadHint4').textContent = lang.uploadHint4;
+            
+            document.getElementById('dimensionsLabel').textContent = lang.dimensionsLabel;
+            document.getElementById('length').placeholder = lang.lengthPlaceholder;
+            document.getElementById('width').placeholder = lang.widthPlaceholder;
+            document.getElementById('height').placeholder = lang.heightPlaceholder;
+            
+            document.getElementById('brandLabel').textContent = lang.brandLabel;
+            document.getElementById('brand').options[0].textContent = lang.selectBrand;
+            
+            document.getElementById('productionDateLabel').textContent = lang.productionDateLabel;
+            document.getElementById('productionDate').options[0].textContent = lang.selectProductionDate;
+            document.getElementById('productionDate').options[1].textContent = lang.year1;
+            document.getElementById('productionDate').options[2].textContent = lang.year2;
+            document.getElementById('productionDate').options[3].textContent = lang.year3;
+            document.getElementById('productionDate').options[4].textContent = lang.year4;
+            document.getElementById('productionDate').options[5].textContent = lang.year5;
+            
+            document.getElementById('expectedPriceLabel').textContent = lang.expectedPriceLabel;
+            document.getElementById('expectedPrice').placeholder = lang.expectedPricePlaceholder;
+            
+            document.getElementById('submitBtn').textContent = lang.submitBtn;
+            
+            // 设置结果区域文本
+            document.getElementById('resultHeader').textContent = lang.resultHeader;
+            document.getElementById('recommendedPriceLabel').textContent = lang.recommendedPriceLabel;
+            document.getElementById('similarCountLabel').textContent = lang.similarCountLabel;
+            document.getElementById('currencyUnit').textContent = lang.currencyUnit;
+            document.getElementById('unitLabel').textContent = lang.unitLabel;
+            document.getElementById('showSimilarBtn').textContent = lang.showSimilarBtn;
+            document.getElementById('similarProductsHeader').textContent = lang.similarProductsHeader;
+            document.getElementById('detailTitle').textContent = lang.detailTitle;
+            document.getElementById('backToListBtn').textContent = lang.backToListBtn;
         }
-
-        async chooseImage (e) {
-            let res = await wepy.chooseImage({
-                sizeType: ['original', 'compressed'],
-                sourceType: ['album', 'camera']
-            });
-            this.files = this.uploadFiles.concat(res.tempFilePaths);
-            this.$apply();
-        },
-
-        previewImage (e) {
-            wepy.previewImage({
-                current: e.currentTarget.id,
-                urls: this.data.uploadFiles
-            });
-        },
-
-        search(val) {
-            this.list = []
-            this.isEmpty = false
-            this.showLoading = true
-            this.keyword = val
-            this.searchGoods()
-        },
-
-        sortBy(e) {
-            switch (e.name) {
-                case 'general':
-                  this.sort = -1
-                  break
-                case 'sale':
-                  this.sort = 3
-                  break
-                case 'price':
-                  this.sort = (e.type === 'desc') ? 2 : 1
-                  break
-                case 'sku':
-                  this.skuval = e.type
-                  break
+        
+        // 图片预览功能
+        function previewImage(input, previewId) {
+            const preview = document.getElementById(previewId);
+            const file = input.files[0];
+            const reader = new FileReader();
+            
+            preview.innerHTML = '';
+            
+            reader.onload = function(e) {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                preview.appendChild(img);
             }
-
-            this.goods = []
-            this.showLoading = true
-            this.showHistory = false
-            this.isEmpty = false
-            this.searchGoods()
+            
+            if (file) {
+                reader.readAsDataURL(file);
+            }
         }
-    }
-
-    onLoad(option) {
-        let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {}
-        this.openId = userSpecialInfo.openid
-        if (this.categoryCode !== undefined && this.categoryCode.length > 0) {
+        
+        // 为图片预览区域添加点击事件
+        document.querySelectorAll('.image-preview').forEach(preview => {
+            preview.addEventListener('click', function() {
+                const input = this.querySelector('input');
+                if (input) input.click();
+            });
+        });
+        
+        // 模拟的类似GPU数据
+        const mockSimilarGPUs = [
+            { id: 1, brand: "英伟达", model: "RTX 3090", length: 313, width: 138, height: 61, productionDate: "1", price: 12000, 
+              details: "NVIDIA GeForce RTX 3090 是英伟达公司推出的高端显卡，拥有24GB GDDR6X显存，10496个CUDA核心。" },
+            { id: 2, brand: "英伟达", model: "RTX 3080", length: 285, width: 112, height: 40, productionDate: "2", price: 8000, 
+              details: "NVIDIA GeForce RTX 3080 拥有10GB GDDR6X显存，8704个CUDA核心，性能强劲。" },
+            { id: 3, brand: "AMD", model: "RX 6900 XT", length: 267, width: 120, height: 50, productionDate: "1", price: 9000, 
+              details: "AMD Radeon RX 6900 XT 采用RDNA 2架构，16GB GDDR6显存，5120个流处理器。" },
+            { id: 4, brand: "沐曦", model: "MX100", length: 300, width: 130, height: 55, productionDate: "1", price: 7500, 
+              details: "沐曦MX100是国内自主研发的高性能显卡，专为AI计算和图形处理优化。" },
+            { id: 5, brand: "天数", model: "TS200", length: 290, width: 125, height: 45, productionDate: "2", price: 6800, 
+              details: "天数智芯TS200是一款面向数据中心的高性能计算卡，支持多种AI框架。" },
+            { id: 6, brand: "英伟达", model: "RTX 3070", length: 242, width: 112, height: 40, productionDate: "2", price: 5000, 
+              details: "NVIDIA GeForce RTX 3070 拥有8GB GDDR6显存，5888个CUDA核心，性价比极高。" },
+            { id: 7, brand: "AMD", model: "RX 6800 XT", length: 267, width: 120, height: 50, productionDate: "1", price: 7000, 
+              details: "AMD Radeon RX 6800 XT 采用RDNA 2架构，16GB GDDR6显存，4608个流处理器。" },
+            { id: 8, brand: "英特尔", model: "Arc A770", length: 270, width: 110, height: 42, productionDate: "1", price: 3500, 
+              details: "Intel Arc A770 是英特尔重返独立显卡市场的首款高性能产品，16GB GDDR6显存。" },
+            { id: 9, brand: "英伟达", model: "RTX 3060 Ti", length: 242, width: 112, height: 40, productionDate: "3", price: 3200, 
+              details: "NVIDIA GeForce RTX 3060 Ti 拥有8GB GDDR6显存，4864个CUDA核心。" },
+            { id: 10, brand: "AMD", model: "RX 6700 XT", length: 267, width: 120, height: 50, productionDate: "2", price: 3800, 
+              details: "AMD Radeon RX 6700 XT 采用RDNA 2架构，12GB GDDR6显存，2560个流处理器。" },
+            { id: 11, brand: "沐曦", model: "MX80", length: 280, width: 120, height: 50, productionDate: "2", price: 4500, 
+              details: "沐曦MX80是国内自主研发的中高端显卡，适合专业图形处理和AI推理。" },
+            { id: 12, brand: "天数", model: "TS150", length: 270, width: 115, height: 45, productionDate: "3", price: 4200, 
+              details: "天数智芯TS150是一款面向企业和专业用户的通用计算卡。" }
+        ];
+        
+        // 表单提交处理
+        document.getElementById('gpuForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // 获取表单数据
+            const length = document.getElementById('length').value;
+            const width = document.getElementById('width').value;
+            const height = document.getElementById('height').value;
+            const brand = document.getElementById('brand').value;
+            const productionDate = document.getElementById('productionDate').value;
+            const expectedPrice = document.getElementById('expectedPrice').value;
+            
+            // 模拟服务器处理 - 在实际应用中这里应该是AJAX请求
+            setTimeout(() => {
+                // 模拟推荐价格计算 (这里只是简单示例)
+                const basePrice = {
+                    "沐曦": 6000,
+                    "英伟达": 8000,
+                    "天数": 5000,
+                    "AMD": 7000,
+                    "英特尔": 4000
+                };
+                
+                let recommendedPrice = basePrice[brand] || 5000;
+                
+                // 根据使用年限调整价格
+                const ageDiscount = {
+                    "1": 1.0,
+                    "2": 0.8,
+                    "3": 0.6,
+                    "4": 0.5,
+                    "5": 0.4
+                };
+                
+                recommendedPrice *= ageDiscount[productionDate] || 0.5;
+                
+                // 随机波动 ±10%
+                recommendedPrice *= (0.9 + Math.random() * 0.2);
+                recommendedPrice = Math.round(recommendedPrice);
+                
+                // 显示结果
+                document.getElementById('recommendedPrice').textContent = recommendedPrice;
+                
+                // 筛选类似GPU (这里只是简单示例)
+                const similarGPUs = mockSimilarGPUs.filter(gpu => 
+                    gpu.brand === brand || 
+                    Math.abs(gpu.length - length) < 30 || 
+                    Math.abs(gpu.width - width) < 20 || 
+                    Math.abs(gpu.height - height) < 10
+                );
+                
+                document.getElementById('similarCount').textContent = similarGPUs.length;
+                
+                // 存储类似GPU数据供后续显示
+                document.getElementById('similarProducts').dataset.products = JSON.stringify(similarGPUs);
+                
+                // 显示结果区域
+                document.getElementById('resultSection').style.display = 'block';
+                document.getElementById('similarProducts').style.display = 'none';
+                document.getElementById('productDetail').style.display = 'none';
+            }, 1000);
+        });
+        
+        // 显示类似商品按钮点击事件
+        document.getElementById('showSimilarBtn').addEventListener('click', function() {
+            const similarProducts = document.getElementById('similarProducts');
+            const productList = document.getElementById('productList');
+            
+            if (similarProducts.style.display === 'none') {
+                // 解析存储的类似GPU数据
+                const productsData = JSON.parse(similarProducts.dataset.products || '[]');
+                const productsToShow = productsData.slice(0, 10);
+                
+                // 清空现有列表
+                productList.innerHTML = '';
+                
+                // 添加商品到列表
+                productsToShow.forEach(product => {
+                    const productItem = document.createElement('div');
+                    productItem.className = 'product-item';
+                    
+                    const dateText = {
+                        "1": i18nConfig[currentLanguage].year1,
+                        "2": i18nConfig[currentLanguage].year2,
+                        "3": i18nConfig[currentLanguage].year3,
+                        "4": i18nConfig[currentLanguage].year4,
+                        "5": i18nConfig[currentLanguage].year5
+                    };
+                    
+                    // 创建可点击的商品链接
+                    const productLink = document.createElement('a');
+                    productLink.href = 'javascript:void(0)';
+                    productLink.className = 'product-link';
+                    productLink.textContent = `${product.brand} ${product.model}`;
+                    productLink.onclick = function() {
+                        showProductDetail(product.id);
+                    };
+                    
+                    productItem.innerHTML = `
+                        <p><strong>${i18nConfig[currentLanguage].modelText}</strong> `;
+                    productItem.appendChild(productLink);
+                    productItem.innerHTML += `</p>
+                        <p><strong>${i18nConfig[currentLanguage].dimensionsText}</strong> ${product.length}mm × ${product.width}mm × ${product.height}mm</p>
+                        <p><strong>${i18nConfig[currentLanguage].productionDateText}</strong> ${dateText[product.productionDate] || product.productionDate + i18nConfig[currentLanguage].year1.substring(1)}</p>
+                        <p><strong>${i18nConfig[currentLanguage].priceText}</strong> ${product.price} ${i18nConfig[currentLanguage].currencyUnit}</p>
+                    `;
+                    
+                    productList.appendChild(productItem);
+                });
+                
+                similarProducts.style.display = 'block';
+            } else {
+                similarProducts.style.display = 'none';
+            }
+        });
+        
+        // 显示商品详情
+        function showProductDetail(productId) {
+            const product = mockSimilarGPUs.find(p => p.id === productId);
+            if (!product) return;
+            
+            const lang = i18nConfig[currentLanguage];
+            const detailTitle = document.getElementById('detailTitle');
+            const detailContent = document.getElementById('detailContent');
+            
+            detailTitle.textContent = `${product.brand} ${product.model} ${lang.detailTitle}`;
+            
+            const dateText = {
+                "1": lang.year1,
+                "2": lang.year2,
+                "3": lang.year3,
+                "4": lang.year4,
+                "5": lang.year5
+            };
+            
+            detailContent.innerHTML = `
+                <p><strong>${lang.brandText}</strong> ${product.brand}</p>
+                <p><strong>${lang.modelText}</strong> ${product.model}</p>
+                <p><strong>${lang.dimensionsText}</strong> ${product.length}mm × ${product.width}mm × ${product.height}mm</p>
+                <p><strong>${lang.productionDateText}</strong> ${dateText[product.productionDate] || product.productionDate + lang.year1.substring(1)}</p>
+                <p><strong>${lang.priceText}</strong> ${product.price} ${lang.currencyUnit}</p>
+                <p><strong>${lang.descriptionText}</strong> ${product.details}</p>
+            `;
+            
+            // 隐藏列表，显示详情
+            document.getElementById('similarProducts').style.display = 'none';
+            document.getElementById('productDetail').style.display = 'block';
         }
-    }
-
-    onReachBottom() {
-    }
-  }
-</script>
-
-<style lang="less">
-  .title {
-  }
-
-  .btn-box {
-    width: 377rpx;
-    margin: 0 auto;
-    padding-top: 88rpx;
-
-    .button {
-      color: #999;
-    }
-  }
-
-  .table {
-    display: table;
-    width: 100%;
-  }
-  .table-row {
-    display: table-row;
-  }
-  .table-cell {
-    display: table-cell;
-    border: 1px solid #ccc;
-    padding: 8px;
-  }
-  .picker {
-    padding: 10px;
-    background-color: #f8f8f8;
-    border: 1px solid #eee;
-  }
-</style>
+        
+        // 隐藏商品详情，返回列表
+        document.getElementById('backToListBtn').addEventListener('click', function() {
+            document.getElementById('productDetail').style.display = 'none';
+            document.getElementById('similarProducts').style.display = 'block';
+        });
+        
+        // 初始化界面
+        initUI();
+    </script>
+</body>
+</html>
