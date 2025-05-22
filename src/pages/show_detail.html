@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商品详情</title>
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* 详情页样式 */
+        .detail-container {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            margin-top: 20px;
+        }
+        
+        .detail-header {
+            display: flex;
+            padding: 20px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .detail-images {
+            width: 50%;
+            height: 400px;
+        }
+        
+        .detail-info {
+            width: 50%;
+            padding-left: 30px;
+        }
+        
+        .detail-title {
+            font-size: 22px;
+            margin-bottom: 15px;
+        }
+        
+        .detail-price {
+            font-size: 24px;
+            color: #ff6700;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+        
+        .detail-meta {
+            margin: 20px 0;
+        }
+        
+        .meta-item {
+            display: flex;
+            margin-bottom: 10px;
+        }
+        
+        .meta-label {
+            width: 80px;
+            color: #999;
+        }
+        
+        .meta-value {
+            flex: 1;
+        }
+        
+        .detail-actions {
+            display: flex;
+            margin-top: 30px;
+        }
+        
+        .detail-action-btn {
+            display: flex;
+            align-items: center;
+            margin-right: 20px;
+            padding: 8px 15px;
+            background: #f5f5f5;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+        
+        .detail-action-btn:hover {
+            background: #eee;
+        }
+        
+        .detail-action-btn i {
+            margin-right: 5px;
+        }
+        
+        .detail-content {
+            padding: 20px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            margin: 20px 0 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .comments {
+            margin-top: 30px;
+        }
+        
+        .comment-item {
+            padding: 15px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .comment-user {
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .comment-content {
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        /* 返回按钮 */
+        .back-btn {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 8px 15px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .back-btn:hover {
+            background: #e0e0e0;
+        }
+        
+        /* 页面切换动画 */
+        .page {
+            transition: opacity 0.3s ease;
+        }
+        
+        .page.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        /* 评论输入框 */
+        .comment-form {
+            margin-top: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        .comment-input {
+            width: 100%;
+            height: 100px;
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #f0f0f0;
+            border-radius: 4px;
+            resize: none;
+        }
+        
+        .comment-submit {
+            display: inline-block;
+            padding: 8px 15px;
+            background: #ff6700;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .comment-submit:hover {
+            background: #e05d00;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='index.html'">
+            <i class="fas fa-arrow-left"></i> 返回列表
+        </div>
+        
+        <div class="detail-container">
+            <div class="detail-header">
+                <div class="detail-images">
+                    <div class="swiper">
+                        <div class="swiper-wrapper">
+                            <!-- 详情页图片将从后端动态生成 -->
+                        </div>
+                        <div class="swiper-pagination"></div>
+                        <div class="swiper-button-next"></div>
+                        <div class="swiper-button-prev"></div>
+                    </div>
+                </div>
+                
+                <div class="detail-info">
+                    <h2 class="detail-title"></h2>
+                    <div class="detail-price"></div>
+                    
+                    <div class="detail-meta">
+                        <!-- 详情页商品信息将从后端动态生成 -->
+                    </div>
+                    
+                    <div class="detail-actions">
+                        <div class="detail-action-btn">
+                            <i class="far fa-heart"></i>
+                            <span>256 喜欢</span>
+                        </div>
+                        <div class="detail-action-btn">
+                            <i class="far fa-bookmark"></i>
+                            <span>128 收藏</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="detail-content">
+                <h3 class="section-title">商品描述</h3>
+                <p></p>
+                
+                <h3 class="section-title">商品参数</h3>
+                <div class="detail-meta">
+                    <!-- 详情页商品参数将从后端动态生成 -->
+                </div>
+                
+                <div class="comments">
+                    <h3 class="section-title">用户评价</h3>
+                    <div class="comment-item">
+                        <div class="comment-user">用户12345</div>
+                        <div class="comment-content">鞋子很舒服，尺码标准，穿着跑步很轻便，值得购买！</div>
+                    </div>
+                    <div class="comment-item">
+                        <div class="comment-user">购物达人</div>
+                        <div class="comment-content">颜色很正，跟图片一样，透气性很好，夏天穿也不会闷脚。</div>
+                    </div>
+                </div>
+                
+                <div class="comment-form">
+                    <textarea class="comment-input" placeholder="写下你的评论..."></textarea>
+                    <button class="comment-submit" onclick="submitComment()">提交评论</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script>
+        // 模拟从后端获取的商品数据
+        const products = [
+            {
+                id: 1,
+                title: "时尚休闲运动鞋 2023新款轻便透气跑步鞋男女同款",
+                price: "¥399",
+                images: [
+                    "https://via.placeholder.com/300x300?text=商品1-1",
+                    "https://via.placeholder.com/300x300?text=商品1-2",
+                    "https://via.placeholder.com/300x300?text=商品1-3",
+                    "https://via.placeholder.com/300x300?text=商品1-4"
+                ],
+                description: "这款运动鞋采用透气网布鞋面，轻便舒适，适合日常穿着和轻度运动。鞋底采用耐磨橡胶材质，提供良好的抓地力和缓震效果。",
+                meta: [
+                    { label: "品牌", value: "NIKE" },
+                    { label: "尺寸", value: "36-44" },
+                    { label: "颜色", value: "白色/黑色/红色" },
+                    { label: "材质", value: "网布+橡胶底" }
+                ]
+            },
+            {
+                id: 2,
+                title: "轻薄便携笔记本电脑 13.3英寸超极本 商务办公学生用",
+                price: "¥5999",
+                images: [
+                    "https://via.placeholder.com/300x300?text=商品2-1",
+                    "https
