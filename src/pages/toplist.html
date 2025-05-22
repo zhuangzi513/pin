@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>电商平台 - TopList 布局</title>
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* TopList 样式 */
+        .toplist {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+        
+        .toplist-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .toplist-title {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .toplist-more {
+            color: #666;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        
+        .toplist-more:hover {
+            color: #ff6700;
+        }
+        
+        /* 纵向布局的 Card 列表 */
+        .toplist-cards {
+            display: flex;
+            flex-direction: column;
+            padding: 0 10px;
+        }
+        
+        .card {
+            display: flex;
+            padding: 15px 10px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .card:last-child {
+            border-bottom: none;
+        }
+        
+        .card:hover {
+            background-color: #fafafa;
+        }
+        
+        /* 商品图片轮播 */
+        .card-images {
+            width: 120px;
+            height: 120px;
+            flex-shrink: 0;
+            margin-right: 15px;
+            position: relative;
+        }
+        
+        .swiper {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .swiper-slide {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #f9f9f9;
+        }
+        
+        .swiper-slide img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: cover;
+        }
+        
+        /* 商品信息 */
+        .card-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .card-title {
+            font-size: 16px;
+            margin-bottom: 8px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .card-price {
+            font-size: 18px;
+            font-weight: bold;
+            color: #ff6700;
+            margin: 8px 0;
+        }
+        
+        .card-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .action-btn {
+            display: flex;
+            align-items: center;
+            color: #666;
+            font-size: 13px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        
+        .action-btn:hover {
+            color: #ff6700;
+        }
+        
+        .action-btn i {
+            margin-right: 5px;
+            font-size: 14px;
+        }
+        
+        /* 详情页样式 */
+        .detail-container {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            margin-top: 20px;
+        }
+        
+        .detail-header {
+            display: flex;
+            padding: 20px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .detail-images {
+            width: 50%;
+            height: 400px;
+        }
+        
+        .detail-info {
+            width: 50%;
+            padding-left: 30px;
+        }
+        
+        .detail-title {
+            font-size: 22px;
+            margin-bottom: 15px;
+        }
+        
+        .detail-price {
+            font-size: 24px;
+            color: #ff6700;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+        
+        .detail-meta {
+            margin: 20px 0;
+        }
+        
+        .meta-item {
+            display: flex;
+            margin-bottom: 10px;
+        }
+        
+        .meta-label {
+            width: 80px;
+            color: #999;
+        }
+        
+        .meta-value {
+            flex: 1;
+        }
+        
+        .detail-actions {
+            display: flex;
+            margin-top: 30px;
+        }
+        
+        .detail-action-btn {
+            display: flex;
+            align-items: center;
+            margin-right: 20px;
+            padding: 8px 15px;
+            background: #f5f5f5;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+        
+        .detail-action-btn:hover {
+            background: #eee;
+        }
+        
+        .detail-action-btn i {
+            margin-right: 5px;
+        }
+        
+        .detail-content {
+            padding: 20px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            margin: 20px 0 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .comments {
+            margin-top: 30px;
+        }
+        
+        .comment-item {
+            padding: 15px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .comment-user {
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .comment-content {
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        /* 返回按钮 */
+        .back-btn {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 8px 15px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .back-btn:hover {
+            background: #e0e0e0;
+        }
+        
+        /* 页面切换动画 */
+        .page {
+            transition: opacity 0.3s ease;
+        }
+        
+        .page.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        /* 评论输入框 */
+        .comment-form {
+            margin-top: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        .comment-input {
+            width: 100%;
+            height: 100px;
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #f0f0f0;
+            border-radius: 4px;
+            resize: none;
+        }
+        
+        .comment-submit {
+            display: inline-block;
+            padding: 8px 15px;
+            background: #ff6700;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .comment-submit:hover {
+            background: #e05d00;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 商品列表页 -->
+        <div id="list-page" class="page">
+            <!-- TopList 1 -->
+            <div class="toplist">
+                <div class="toplist-header">
+                    <div class="toplist-title">热销商品榜</div>
+                    <div class="toplist-more">查看更多 <i class="fas fa-angle-right"></i></div>
+                </div>
+                <div class="toplist-cards">
+                    <!-- 商品卡片将从后端动态生成 -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- 商品详情页 -->
+        <div id="detail-page" class="page hidden">
+            <div class="back-btn" onclick="hideDetail()">
+                <i class="fas fa-arrow-left"></i> 返回列表
+            </div>
+            
+            <div class="detail-container">
+                <div class="detail-header">
+                    <div class="detail-images">
+                        <div class="swiper">
+                            <div class="swiper-wrapper">
+                                <!-- 详情页图片将从后端动态生成 -->
+                            </div>
+                            <div class="swiper-pagination"></div>
+                            <div class="swiper-button-next"></div>
+                            <div class="swiper-button-prev"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="detail-info">
+                        <h2 class="detail-title"></h2>
+                        <div class="detail-price"></div>
+                        
+                        <div class="detail-meta">
+                            <!-- 详情页商品信息将从后端动态生成 -->
+                        </div>
+                        
+                        <div class="detail-actions">
+                            <div class="detail-action-btn">
+                                <i class="far fa-heart"></i>
+                                <span>256 喜欢</span>
+                            </div>
+                            <div class="detail-action-btn">
+                                <i class="far fa-bookmark"></i>
+                                <span>128 收藏</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="detail-content">
+                    <h3 class="section-title">商品描述</h3>
+                    <p></p>
+                    
+                    <h3 class="section-title">商品参数</h3>
+                    <div class="detail-meta">
+                        <!-- 详情页商品参数将从后端动态生成 -->
+                    </div>
+                    
+                    <div class="comments">
+                        <h3 class="section-title">用户评价</h3>
+                        <div class="comment-item">
+                            <div class="comment-user">用户12345</div>
+                            <div class="comment-content">鞋子很舒服，尺码标准，穿着跑步很轻便，值得购买！</div>
+                        </div>
+                        <div class="comment-item">
+                            <div class="comment-user">购物达人</div>
+                            <div class="comment-content">颜色很正，跟图片一样，透气性很好，夏天穿也不会闷脚。</div>
+                        </div>
+                    </div>
+                    
+                    <div class="comment-form">
+                        <textarea class="comment-input" placeholder="写下你的评论..."></textarea>
+                        <button class="comment-submit" onclick="submitComment()">提交评论</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script>
+        // 模拟从后端获取的商品数据
+        const products = [
+            {
+                id: 1,
+                title: "时尚休闲运动鞋 2023新款轻便透气跑步鞋男女同款",
+                price: "¥399",
+                images: [
+                    "https://via.placeholder.com/300x300?text=商品1-1",
+                    "https://via.placeholder.com/300x300?text=商品1-2",
+                    "https://via.placeholder.com/300x300?text=商品1-3",
+                    "https://via.placeholder.com/300x300?text=商品1-4"
+                ],
+                description: "这款运动鞋采用透气网布鞋面，轻便舒适，适合日常穿着和轻度运动。鞋底采用耐磨橡胶材质，提供良好的抓地力和缓震效果。",
+                meta: [
+                    { label: "品牌", value: "NIKE" },
+                    { label: "尺寸", value: "36-44" },
+                    { label: "颜色", value: "白色/黑色/红色" },
+                    { label: "材质", value: "网布+橡胶底" }
+                ]
+            },
+            {
+                id: 2,
+                title: "轻薄便携笔记本电脑 13.3英寸超极本 商务办公学生用",
+                price: "¥5999",
+                images: [
+                    "https://via.placeholder.com/300x300?text=商品2-1",
+                    "https://via.placeholder.com/300x300?text=商品2-2",
+                    "https://via.placeholder.com/300x300?text=商品2-3",
+                    "https://via.placeholder.com/300x300?text=商品2-4"
+                ],
+                description: "这款笔记本电脑采用轻薄设计，适合商务办公和学生使用。13.3英寸屏幕，分辨率高达1920x1080，提供舒适的视觉体验。",
+                meta: [
+                    { label: "品牌", value: "DELL" },
+                    { label: "处理器", value: "Intel Core i5" },
+                    { label: "内存", value: "8GB" },
+                    { label: "存储", value: "512GB SSD" }
+                ]
+            }
+        ];
+
+        // 动态生成商品卡片
+        document.addEventListener('DOMContentLoaded', function() {
+            const toplistCards = document.querySelector('.toplist-cards');
+            products.forEach(product => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.setAttribute('onclick', `showDetail(${product.id})`);
+                card.innerHTML = `
+                    <div class="card-images">
+                        <div class="swiper">
+                            <div class="swiper-wrapper">
+                                ${product.images.map(image => `
+                                    <div class="swiper-slide"><img src="${image}" alt="商品图片"></div>
+                                `).join('')}
+                            </div>
+                            <div class="swiper-pagination"></div>
+                        </div>
+                    </div>
+                    <div class="card-info">
+                        <h3 class="card-title">${product.title}</h3>
+                        <div class="card-price">${product.price}</div>
+                        <div class="card-actions">
+                            <div class="action-btn">
+                                <i class="far fa-heart"></i>
+                                <span>256</span>
+                            </div>
+                            <div class="action-btn">
+                                <i class="far fa-bookmark"></i>
+                                <span>128</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                toplistCards.appendChild(card);
+
+                // 初始化这个卡片的Swiper
+                setTimeout(() => {
+                    new Swiper(card.querySelector('.swiper'), {
+                        pagination: {
+                            el: card.querySelector('.swiper-pagination'),
+                            clickable: true
+                        },
+                        modules: [Pagination]
+                    });
+                }, 100);
+            });
+        });
+
+        // 初始化详情页轮播
+        document.addEventListener('DOMContentLoaded', function() {
+            const detailSwiper = new Swiper('.detail-images .swiper', {
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true
+                },
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+                modules: [Pagination, Navigation]
+            });
+        });
+
+        // 页面切换逻辑
+        function showDetail(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+
+            document.getElementById('list-page').classList.add('hidden');
+            document.getElementById('detail-page').classList.remove('hidden');
+
+            // 动态填充详情页内容
+            document.querySelector('.detail-title').textContent = product.title;
+            document.querySelector('.detail-price').textContent = product.price;
+            document.querySelector('.detail-content p').textContent = product.description;
+
+            const metaContainer = document.querySelector('.detail-meta');
+            metaContainer.innerHTML = '';
+            product.meta.forEach(item => {
+                metaContainer.innerHTML += `
+                    <div class="meta-item">
+                        <div class="meta-label">${item.label}</div>
+                        <div class="meta-value">${item.value}</div>
+                    </div>
+                `;
+            });
+
+            const detailImages = document.querySelector('.detail-images .swiper-wrapper');
+            detailImages.innerHTML = '';
+            product.images.forEach(image => {
+                detailImages.innerHTML += `
+                    <div class="swiper-slide"><img src="${image}" alt="商品图片"></div>
+                `;
+            });
+
+            // 重新初始化详情页轮播
+            setTimeout(() => {
+                detailSwiper.update();
+            }, 100);
+        }
+
+        function hideDetail() {
+            document.getElementById('detail-page').classList.add('hidden');
+            document.getElementById('list-page').classList.remove('hidden');
+        }
+
+        // 模拟喜欢和收藏功能
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('fa-heart') || e.target.closest('.fa-heart')) {
+                const heartIcon = e.target.classList.contains('fa-heart') ? e.target : e.target.querySelector('.fa-heart');
+                const countElement = heartIcon.nextElementSibling || heartIcon.parentElement.nextElementSibling;
+
+                if (heartIcon.classList.contains('far')) {
+                    heartIcon.classList.remove('far');
+                    heartIcon.classList.add('fas', 'liked');
+                    countElement.textContent = parseInt(countElement.textContent) + 1;
+                } else {
+                    heartIcon.classList.remove('fas', 'liked');
+                    heartIcon.classList.add('far');
+                    countElement.textContent = parseInt(countElement.textContent) - 1;
+                }
+            }
+
+            if (e.target.classList.contains('fa-bookmark') || e.target.closest('.fa-bookmark')) {
+                const bookmarkIcon = e.target.classList.contains('fa-bookmark') ? e.target : e.target.querySelector('.fa-bookmark');
+                const countElement = bookmarkIcon.nextElementSibling || bookmarkIcon.parentElement.nextElementSibling;
+
+                if (bookmarkIcon.classList.contains('far')) {
+                    bookmarkIcon.classList.remove('far');
+                    bookmarkIcon.classList.add('fas', 'bookmarked');
+                    countElement.textContent = parseInt(countElement.textContent) + 1;
+                } else {
+                    bookmarkIcon.classList.remove('fas', 'bookmarked');
+                    bookmarkIcon.classList.add('far');
+                    countElement.textContent = parseInt(countElement.textContent) - 1;
+                }
+            }
+        });
+
+        // 提交评论
+        function submitComment() {
+            const commentInput = document.querySelector('.comment-input');
+            const commentContent = commentInput.value.trim();
+            if (commentContent === '') {
+                alert('请输入评论内容！');
+                return;
+            }
+
+            // 模拟提交评论
+            const commentsContainer = document.querySelector('.comments');
+            const newComment = document.createElement('div');
+            newComment.className = 'comment-item';
+            newComment.innerHTML = `
+                <div class="comment-user">用户</div>
+                <div class="comment-content">${commentContent}</div>
+            `;
+            commentsContainer.appendChild(newComment);
+
+            // 清空输入框
+            commentInput.value = '';
+        }
+    </script>
+</body>
+</html>
